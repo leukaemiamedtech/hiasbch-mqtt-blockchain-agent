@@ -130,6 +130,10 @@ We use CamelCase for our directory and file names (except images), we would like
 
 &nbsp;
 
+# Code Styling Guide
+
+Code contributed to HIASBCH MQTT Blockchain Agent must follow the [PEP 8 -- Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/) in order to set a common programming style for all developers working on the code.
+
 # Attribution
 
 Whenever relevant you should add yourself to the contributors section of the READMEs. If you have a public profile on the Peter Moss Leukemia AI Research website, you should use this in your link. Please see the contributing section of any of our READMEs for examples.
