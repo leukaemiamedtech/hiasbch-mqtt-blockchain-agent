@@ -16,7 +16,7 @@ if [ "$cmsg" = "Y" -o "$cmsg" = "y" ]; then
 	echo "User=$USER" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "Type=simple" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "Restart=on-failure" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
-	echo "ExecStart=/usr/bin/python3 /home/$USER/HIAS/components/agents/mqtt/agent.py" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
+	echo "ExecStart=/usr/bin/python3 /home/$USER/HIAS/components/agents/hiasbcha/agent.py" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "[Install]" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "WantedBy=multi-user.target" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
