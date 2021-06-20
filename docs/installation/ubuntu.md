@@ -1,6 +1,6 @@
 # Ubuntu Installation
 
-![HIASBCH-MQTT-Blockchain-Agent](../../assets/images/HIASBCH-MQTT-Blockchain-Agent.jpg)
+![HIASBCH MQTT Blockchain Agent](../img/HIASBCH-MQTT-Blockchain-Agent.jpg)
 
 # Table Of Contents
 
@@ -66,7 +66,7 @@ Navigate to the **components/agents/hiasbcha/** directory in your HIAS project r
 
 ### Developer forks
 
-Developers from the Github community that would like to contribute to the development of this project should first create a fork, and clone that repository. For detailed information please view the [CONTRIBUTING](../../CONTRIBUTING.md "CONTRIBUTING") guide. You should pull the latest code from the development branch.
+Developers from the Github community that would like to contribute to the development of this project should first create a fork, and clone that repository. For detailed information please view the [CONTRIBUTING](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/blob/main/CONTRIBUTING.md "CONTRIBUTING") guide. You should pull the latest code from the development branch.
 
 ``` bash
  git clone -b "2.0.0" https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent.git
@@ -96,17 +96,17 @@ Each HIAS IoT Agent has a JSON representation stored in the HIASCDI Context Brok
 
 A HIAS IoT Agent is a bridge between HIAS devices and applications, and the HIASCDI Context Broker. The IoT Agents process incoming data using a specific machine to machine communication protocol and then converting into a format compatible with HIASCDI, before sending the data to HIASCDI to update the contextual information.
 
-![HIAS IoT Agents](../../assets/images/hias-iotjumpway-agents.jpg)
+![HIAS IoT Agents](../img/hias-iotjumpway-agents.jpg)
 
 You will now need to create your HIASC IoT Agent and retrieve the agent credentials. Navigate to **IoT->Entities->Agents** and click on the **+** next to the **Network Agents** title to create a HIAS IoT Agent.
 
-![HIAS IoT Agent](../../assets/images/create-hias-iotjumpway-agent.jpg)
+![HIAS IoT Agent](../img/create-hias-iotjumpway-agent.jpg)
 
 Make sure to select **MQTT** as the protocol for your Agent. Once you have completed the form and submitted it, you can find the newly created AI Agent by navigating to **IoT->Entities->Agents** and clicking on the relevant Agent.
 
 On the HIAS IoT Agent page you will be able to update the contextual data for the agent, and also find the JSON representation.
 
-![HIAS IoT Agent](../../assets/images/edit-hias-iotjumpway-agent.jpg)
+![HIAS IoT Agent](../img/edit-hias-iotjumpway-agent.jpg)
 
 You now need to download the credentials required to connect the Acute Lymphoblastic Leukemia oneAPI Classifier to the HIAS network.
 
@@ -129,29 +129,24 @@ Now you can continue with the HIAS [getting started guide](../getting-started.md
 &nbsp;
 
 # Contributing
+Asociación de Investigacion en Inteligencia Artificial Para la Leucemia Peter Moss encourages and welcomes code contributions, bug fixes and enhancements from the Github community.
 
-Asociación de Investigacion en Inteligencia Artificial Para la Leucemia Peter Moss encourages and welcomes code contributions, bug fixes and enhancements from the Github.
-
-Please read the [CONTRIBUTING](../../CONTRIBUTING.md "CONTRIBUTING") document for a full guide to forking our repositories and submitting your pull requests. You will also find information about our code of conduct on this page.
+Please read the [CONTRIBUTING](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/blob/main/CONTRIBUTING.md "CONTRIBUTING") document for a full guide to forking our repositories and submitting your pull requests. You will also find information about our code of conduct on this page.
 
 ## Contributors
-
-- [Adam Milton-Barker](https://www.leukemiaresearchassociation.ai/team/adam-milton-barker "Adam Milton-Barker") - [Asociacion De Investigacion En Inteligencia Artificial Para La Leucemia Peter Moss](https://www.leukemiaresearchassociation.ai "Asociacion De Investigacion En Inteligencia Artificial Para La Leucemia Peter Moss") President/Founder & Lead Developer, Sabadell, Spain
+- [Adam Milton-Barker](https://www.leukemiaairesearch.com/association/volunteers/adam-milton-barker "Adam Milton-Barker") - [Asociación de Investigacion en Inteligencia Artificial Para la Leucemia Peter Moss](https://www.leukemiaresearchassociation.ai "Asociación de Investigacion en Inteligencia Artificial Para la Leucemia Peter Moss") President/Founder & Lead Developer, Sabadell, Spain
 
 &nbsp;
 
 # Versioning
-
-You use SemVer for versioning. For the versions available, see [Releases](../../releases "Releases").
+We use SemVer for versioning.
 
 &nbsp;
 
 # License
-
-This project is licensed under the **MIT License** - see the [LICENSE](../../LICENSE "LICENSE") file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/blob/main/LICENSE "LICENSE") file for details.
 
 &nbsp;
 
 # Bugs/Issues
-
-You use the [repo issues](../../issues "repo issues") to track bugs and general requests related to using this project. See [CONTRIBUTING](../../CONTRIBUTING.md "CONTRIBUTING") for more info on how to submit bugs, feature requests and proposals.
+We use the [repo issues](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/issues "repo issues") to track bugs and general requests related to using this project. See [CONTRIBUTING](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/CONTRIBUTING.md "CONTRIBUTING") for more info on how to submit bugs, feature requests and proposals.
