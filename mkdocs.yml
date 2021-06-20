@@ -1,0 +1,8 @@
+site_name: HIASBCH MQTT Blockchain Agent
+site_url: https://example.com/
+repo_url: https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent
+pages:
+  - Home: index.md
+  - 'Getting Started': 'getting-started.md'
+  - 'Installation':
+    - 'Ubuntu Installation Guide': 'installation/ubuntu.md'
