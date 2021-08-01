@@ -1,15 +1,15 @@
 #!/bin/bash
 
-FMSG="- HIAS MQTT IoT Agent service installation terminated"
+FMSG="- HIASBCH MQTT Blockchain Agent service installation terminated"
 
-echo "This script will install the HIAS MQTT IoT Agent service on your device."
+echo "This script will install the HIASBCH MQTT Blockchain Agent service on your device."
 read -p "Proceed (y/n)? " proceed
 
 if [ "$proceed" = "Y" -o "$proceed" = "y" ]; then
-	echo "- Installing HIAS MQTT IoT Agent service"
+	echo "- Installing HIASBCH MQTT Blockchain Agent service"
 	sudo touch /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "[Unit]" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
-	echo "Description=HIAS MQTT IoT Agent service" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
+	echo "Description=HIASBCH MQTT Blockchain Agent service" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "After=multi-user.target" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "After=HIASCDI.service" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
 	echo "" | sudo tee -a /lib/systemd/system/HIASBCH-MQTT-Blockchain-Agent.service
@@ -46,7 +46,7 @@ if [ "$proceed" = "Y" -o "$proceed" = "y" ]; then
 	sudo systemctl enable HIASBCH-MQTT-Blockchain-Agent-Replenish.service
 	sudo systemctl start HIASBCH-MQTT-Blockchain-Agent-Replenish.service
 
-	echo "- Installed HIAS MQTT IoT Agent service!";
+	echo "- Installed HIASBCH MQTT Blockchain Agent service!";
 	exit 0
 else
 	echo $FMSG;
