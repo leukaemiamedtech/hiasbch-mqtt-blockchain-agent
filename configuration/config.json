@@ -1,1 +1,15 @@
-{}
+{
+    "agent": {
+        "params": [],
+        "api": {
+            "content": "application/json"
+        },
+        "proxy": {
+            "up": ""
+        },
+        "hiasbch": {
+            "un": "",
+            "up": ""
+        }
+    }
+}
