@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """ HIASBCH Blockchain Agent Class
 
-HIASBCH Blockchain Agent Class process all data coming from IoT Agents and store
-immutable hashes in the HIASBCH Blockchain providing the functionality
-to perform data integrity checks.
+This object represents a HIAS iotJumpWay IoT Agent. HIAS IoT Agents process all
+data coming from entities connected to the HIAS iotJumpWay broker using the
+MQTT & Websocket machine to machine protocols.
 
 MIT License
 
@@ -39,40 +39,33 @@ monkey.patch_all()
 import json
 import os
 import psutil
-import requests
 import signal
 import sys
 import time
-import threading
-
-import os.path
-sys.path.append(
-	os.path.abspath(os.path.join(__file__,  "..", "..", "..", "..")))
 
 from abc import ABC, abstractmethod
 from datetime import datetime
 from flask import Flask, request, Response
 from threading import Thread
 
-from components.agents.AbstractAgent import AbstractAgent
+from modules.AbstractAgent import AbstractAgent
 
 
-class Agent(AbstractAgent):
-	""" Class representing a HIASBCH Blockchain Agent.
+class agent(AbstractAgent):
+	""" HIASBCH Blockchain Agent Class
 
-	This object represents a HIASBCH Blockchain Agent which
-	process all data coming from IoT Agents and store immutable
-	hashes in the HIASBCH Blockchain providing the functionality
+	HIASBCH Blockchain Agent Class process all data coming from IoT Agents and store
+	immutable hashes in the HIASBCH Blockchain providing the functionality
 	to perform data integrity checks.
 	"""
 
-	def __init__(self, protocol):
-		super().__init__(protocol)
-
-	def statusCallback(self, topic, payload):
+	def actuatorCallback(self, topic, payload):
 		pass
 
 	def lifeCallback(self, topic, payload):
+		pass
+
+	def statusCallback(self, topic, payload):
 		pass
 
 	def sensorsCallback(self, topic, payload):
@@ -113,33 +106,9 @@ class Agent(AbstractAgent):
 		zone = attrs["zone"] if "zone" in attrs else "NA"
 
 		Thread(target=self.hiasbch.storeHash, args=(data["_id"], self.hiasbch.hash(data), int(time.time()),
-				location, entity, bch, entityType), daemon=True).start()
+													location, entity, bch, entityType), daemon=True).start()
 
 		self.helpers.logger.info(entityType + " " + entity + " status update OK")
-
-	def life(self):
-		""" Sends entity statistics to HIAS """
-
-		cpu = psutil.cpu_percent()
-		mem = psutil.virtual_memory()[2]
-		hdd = psutil.disk_usage('/fserver').percent
-		tmp = psutil.sensors_temperatures()['coretemp'][0].current
-		r = requests.get('http://ipinfo.io/json?token=' +
-					self.helpers.credentials["iotJumpWay"]["ipinfo"])
-		data = r.json()
-		location = data["loc"].split(',')
-
-		self.mqtt.publish("Life", {
-			"CPU": str(cpu),
-			"Memory": str(mem),
-			"Diskspace": str(hdd),
-			"Temperature": str(tmp),
-			"Latitude": str(location[0]),
-			"Longitude": str(location[1])
-		})
-
-		self.helpers.logger.info("Agent life statistics published.")
-		threading.Timer(300.0, self.life).start()
 
 	def respond(self, responseCode, response):
 		""" Returns the request repsonse """
@@ -153,20 +122,19 @@ class Agent(AbstractAgent):
 		sys.exit(1)
 
 app = Flask(__name__)
-Agent = Agent("hiasbch")
+agent = agent()
 
 @app.route('/About', methods=['GET'])
 def about():
 	"""
 	Returns Agent details
-
 	Responds to GET requests sent to the North Port About API endpoint.
 	"""
 
-	return Agent.respond(200, {
-		"Identifier": Agent.credentials["iotJumpWay"]["entity"],
-		"Host": Agent.credentials["server"]["ip"],
-		"NorthPort": Agent.credentials["server"]["port"],
+	return agent.respond(200, {
+		"Identifier": agent.credentials["iotJumpWay"]["entity"],
+		"Host": agent.credentials["server"]["ip"],
+		"NorthPort": agent.credentials["server"]["port"],
 		"CPU": psutil.cpu_percent(),
 		"Memory": psutil.virtual_memory()[2],
 		"Diskspace": psutil.disk_usage('/').percent,
@@ -175,29 +143,28 @@ def about():
 
 def main():
 
-	signal.signal(signal.SIGINT, Agent.signal_handler)
-	signal.signal(signal.SIGTERM, Agent.signal_handler)
+	signal.signal(signal.SIGINT, agent.signal_handler)
+	signal.signal(signal.SIGTERM, agent.signal_handler)
 
-	Agent.mongodbConn()
-	Agent.hiascdiConn()
-	Agent.hiasbchConn()
-	Agent.mqttConn({
-		"host": Agent.credentials["iotJumpWay"]["host"],
-		"port": Agent.credentials["iotJumpWay"]["port"],
-		"location": Agent.credentials["iotJumpWay"]["location"],
-		"zone": Agent.credentials["iotJumpWay"]["zone"],
-		"entity": Agent.credentials["iotJumpWay"]["entity"],
-		"name": Agent.credentials["iotJumpWay"]["name"],
-		"un": Agent.credentials["iotJumpWay"]["un"],
-		"up": Agent.credentials["iotJumpWay"]["up"]
+	agent.hiascdiConn()
+	agent.hiasbchConn()
+	agent.mqttConn({
+		"host": agent.credentials["iotJumpWay"]["host"],
+		"port": agent.credentials["iotJumpWay"]["port"],
+		"location": agent.credentials["iotJumpWay"]["location"],
+		"zone": agent.credentials["iotJumpWay"]["zone"],
+		"entity": agent.credentials["iotJumpWay"]["entity"],
+		"name": agent.credentials["iotJumpWay"]["name"],
+		"un": agent.credentials["iotJumpWay"]["un"],
+		"up": agent.credentials["iotJumpWay"]["up"]
 	})
 
-	Agent.mqtt.integrityCallback = Agent.integrityCallback
+	agent.mqtt.integrityCallback = agent.integrityCallback
 
-	Thread(target=Agent.life, args=(), daemon=True).start()
+	agent.threading()
 
-	app.run(host=Agent.helpers.credentials["server"]["ip"],
-			port=Agent.helpers.credentials["server"]["port"])
+	app.run(host=agent.helpers.credentials["server"]["ip"],
+			port=agent.helpers.credentials["server"]["port"])
 
 if __name__ == "__main__":
 	main()

@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-""" HIAS Global Helper Module.
+#!/usr/bin/env python3
+""" HIAS Helpers file.
 
-The HIAS Global Helper Module provides global helper functions
-to HIAS components and devices.
-
-MIT License
-
-Copyright (c) 2021 Asociación de Investigacion en Inteligencia Artificial
-Para la Leucemia Peter Moss
+Configuration and logging functions.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files(the "Software"), to deal
@@ -43,17 +37,15 @@ from datetime import datetime
 
 
 class helpers():
-	""" HIAS Global Helper Module.
+	""" Helper Class
 
-	The HIAS Global Helper Module provides global helper functions
-	to HIAS components and devices.
+	HIAS helper functions.
 	"""
 
 	def __init__(self, ltype, log=True):
 		""" Initializes the Helpers Class. """
 
 		# Loads system configs
-		self.confs_core = {}
 		self.confs = {}
 		self.loadConfs()
 
@@ -65,17 +57,17 @@ class helpers():
 			'%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 		allLogHandler = handlers.TimedRotatingFileHandler(
-			os.path.dirname(os.path.abspath(__file__)) + '/../../../../logs/all.log', when='H', interval=1, backupCount=0)
+			os.path.dirname(os.path.abspath(__file__)) + '/../logs/all.log', when='H', interval=1, backupCount=0)
 		allLogHandler.setLevel(logging.INFO)
 		allLogHandler.setFormatter(formatter)
 
 		errorLogHandler = handlers.TimedRotatingFileHandler(
-			os.path.dirname(os.path.abspath(__file__)) + '/../../../../logs/error.log', when='H', interval=1, backupCount=0)
+			os.path.dirname(os.path.abspath(__file__)) + '/../logs/error.log', when='H', interval=1, backupCount=0)
 		errorLogHandler.setLevel(logging.ERROR)
 		errorLogHandler.setFormatter(formatter)
 
 		warningLogHandler = handlers.TimedRotatingFileHandler(
-			os.path.dirname(os.path.abspath(__file__)) + '/../../../../logs/warning.log', when='H', interval=1, backupCount=0)
+			os.path.dirname(os.path.abspath(__file__)) + '/../logs/warning.log', when='H', interval=1, backupCount=0)
 		warningLogHandler.setLevel(logging.WARNING)
 		warningLogHandler.setFormatter(formatter)
 
@@ -88,17 +80,13 @@ class helpers():
 		self.logger.addHandler(consoleHandler)
 
 		if log is True:
-			self.logger.info("Configuration and credentials loaded.")
 			self.logger.info("Helpers class initialization complete.")
 
 	def loadConfs(self):
 		""" Load the configuration. """
 
+		with open(os.path.dirname(os.path.abspath(__file__)) + '/../configuration/credentials.json') as credentials:
+			self.credentials = json.loads(credentials.read())
+
 		with open(os.path.dirname(os.path.abspath(__file__)) + '/../configuration/config.json') as confs:
 			self.confs = json.loads(confs.read())
-
-		with open(os.path.dirname(os.path.abspath(__file__)) + '/../configuration/credentials.json') as confs:
-			self.credentials = json.loads(confs.read())
-
-		with open(os.path.dirname(os.path.abspath(__file__)) + '/../../../../configuration/config.json') as confs:
-			self.confs_core = json.loads(confs.read())
