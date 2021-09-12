@@ -43,8 +43,6 @@ import signal
 import sys
 import time
 
-from abc import ABC, abstractmethod
-from datetime import datetime
 from flask import Flask, request, Response
 from threading import Thread
 
@@ -52,119 +50,108 @@ from modules.AbstractAgent import AbstractAgent
 
 
 class agent(AbstractAgent):
-	""" HIASBCH Blockchain Agent Class
+    """ HIASBCH Blockchain Agent Class
 
-	HIASBCH Blockchain Agent Class process all data coming from IoT Agents and store
-	immutable hashes in the HIASBCH Blockchain providing the functionality
-	to perform data integrity checks.
-	"""
+    HIASBCH Blockchain Agent Class process all data coming from IoT Agents
+    and store immutable hashes in the HIASBCH Blockchain providing
+    the functionality to perform data integrity checks.
+    """
 
-	def actuatorCallback(self, topic, payload):
-		pass
+    def integrity_callback(self, topic, payload):
+        """Called in the event of an integrity payload
 
-	def lifeCallback(self, topic, payload):
-		pass
+        Args:
+            topic (str): The topic the payload was sent to.
+            payload (:obj:`str`): The payload.
+        """
 
-	def statusCallback(self, topic, payload):
-		pass
+        data = json.loads(payload.decode("utf-8"))
+        split_topic = topic.split("/")
 
-	def sensorsCallback(self, topic, payload):
-		pass
+        if split_topic[1] not in self.ignore_types:
+            entity_type = split_topic[1][:-1]
+        else:
+            entity_type = split_topic[1]
 
-	def integrityCallback(self, topic, payload):
-		"""Called in the event of an integrity payload
+        if entity_type in ["Robotics", "Application", "Staff"]:
+            entity = split_topic[2]
+        else:
+            entity = split_topic[3]
 
-		Args:
-			topic (str): The topic the payload was sent to.
-			payload (:obj:`str`): The payload.
-		"""
+        self.helpers.logger.info(
+            "Received " + entity_type + " Integrity: " + str(data))
 
-		data = json.loads(payload.decode("utf-8"))
-		splitTopic = topic.split("/")
+        attrs = self.get_attributes(entity_type, entity)
+        bch = attrs["blockchain"]
 
-		if splitTopic[1] not in self.ignoreTypes:
-			entityType = splitTopic[1][:-1]
-		else:
-			entityType = splitTopic[1]
+        if not self.hiasbch.iotjumpway_access_check(bch):
+            return
 
-		if entityType in ["Robotics", "Application", "Staff"]:
-			entity = splitTopic[2]
-		else:
-			entity = splitTopic[3]
+        entity = attrs["id"]
+        location = attrs["location"]
+        zone = attrs["zone"] if "zone" in attrs else "NA"
 
-		self.helpers.logger.info(
-			"Received " + entityType + " Integrity: " + str(data))
+        Thread(target=self.hiasbch.store_hash, args=(
+            data["_id"], self.hiasbch.hash(data), int(time.time()),
+            location, entity, bch, entity_type), daemon=True).start()
 
-		attrs = self.getRequiredAttributes(entityType, entity)
-		bch = attrs["blockchain"]
+        self.helpers.logger.info(entity_type + " " + entity + " status update OK")
 
-		if not self.hiasbch.iotJumpWayAccessCheck(bch):
-			return
+    def respond(self, response_code, response):
+        """ Returns the request repsonse """
 
-		entity = attrs["id"]
-		location = attrs["location"]
-		zone = attrs["zone"] if "zone" in attrs else "NA"
+        return Response(response=json.dumps(response, indent=4), status=response_code,
+                        mimetype="application/json")
 
-		Thread(target=self.hiasbch.storeHash, args=(data["_id"], self.hiasbch.hash(data), int(time.time()),
-													location, entity, bch, entityType), daemon=True).start()
-
-		self.helpers.logger.info(entityType + " " + entity + " status update OK")
-
-	def respond(self, responseCode, response):
-		""" Returns the request repsonse """
-
-		return Response(response=json.dumps(response, indent=4), status=responseCode,
-						mimetype="application/json")
-
-	def signal_handler(self, signal, frame):
-		self.helpers.logger.info("Disconnecting")
-		self.mqtt.disconnect()
-		sys.exit(1)
+    def signal_handler(self, signal, frame):
+        self.helpers.logger.info("Disconnecting")
+        self.mqtt.disconnect()
+        sys.exit(1)
 
 app = Flask(__name__)
 agent = agent()
 
 @app.route('/About', methods=['GET'])
 def about():
-	"""
-	Returns Agent details
-	Responds to GET requests sent to the North Port About API endpoint.
-	"""
+    """
+    Returns Agent details
+    Responds to GET requests sent to the North Port About API endpoint.
+    """
 
-	return agent.respond(200, {
-		"Identifier": agent.credentials["iotJumpWay"]["entity"],
-		"Host": agent.credentials["server"]["ip"],
-		"NorthPort": agent.credentials["server"]["port"],
-		"CPU": psutil.cpu_percent(),
-		"Memory": psutil.virtual_memory()[2],
-		"Diskspace": psutil.disk_usage('/').percent,
-		"Temperature": psutil.sensors_temperatures()['coretemp'][0].current
-	})
+    return agent.respond(200, {
+        "Identifier": agent.credentials["iotJumpWay"]["entity"],
+        "Host": agent.credentials["server"]["ip"],
+        "NorthPort": agent.credentials["server"]["port"],
+        "CPU": psutil.cpu_percent(),
+        "Memory": psutil.virtual_memory()[2],
+        "Diskspace": psutil.disk_usage('/').percent,
+        "Temperature": psutil.sensors_temperatures()['coretemp'][0].current
+    })
 
 def main():
 
-	signal.signal(signal.SIGINT, agent.signal_handler)
-	signal.signal(signal.SIGTERM, agent.signal_handler)
+    signal.signal(signal.SIGINT, agent.signal_handler)
+    signal.signal(signal.SIGTERM, agent.signal_handler)
 
-	agent.hiascdiConn()
-	agent.hiasbchConn()
-	agent.mqttConn({
-		"host": agent.credentials["iotJumpWay"]["host"],
-		"port": agent.credentials["iotJumpWay"]["port"],
-		"location": agent.credentials["iotJumpWay"]["location"],
-		"zone": agent.credentials["iotJumpWay"]["zone"],
-		"entity": agent.credentials["iotJumpWay"]["entity"],
-		"name": agent.credentials["iotJumpWay"]["name"],
-		"un": agent.credentials["iotJumpWay"]["un"],
-		"up": agent.credentials["iotJumpWay"]["up"]
-	})
+    agent.hiascdi_connection()
+    agent.hiasbch_connection()
+    agent.mqtt_connection({
+        "host": agent.credentials["iotJumpWay"]["host"],
+        "port": agent.credentials["iotJumpWay"]["port"],
+        "location": agent.credentials["iotJumpWay"]["location"],
+        "zone": agent.credentials["iotJumpWay"]["zone"],
+        "entity": agent.credentials["iotJumpWay"]["entity"],
+        "name": agent.credentials["iotJumpWay"]["name"],
+        "un": agent.credentials["iotJumpWay"]["un"],
+        "up": agent.credentials["iotJumpWay"]["up"]
+    })
 
-	agent.mqtt.integrityCallback = agent.integrityCallback
+    agent.mqtt.integrity_callback = agent.integrity_callback
 
-	agent.threading()
+    agent.threading()
 
-	app.run(host=agent.helpers.credentials["server"]["ip"],
-			port=agent.helpers.credentials["server"]["port"])
+    app.run(host=agent.helpers.credentials["server"]["ip"],
+            port=agent.helpers.credentials["server"]["port"])
 
 if __name__ == "__main__":
-	main()
+    main()
