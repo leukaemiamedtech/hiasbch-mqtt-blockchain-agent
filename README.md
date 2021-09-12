@@ -3,7 +3,7 @@
 
 ![HIASBCH MQTT Blockchain Agent](assets/images/project-banner.jpg)
 
-[![CURRENT RELEASE](https://img.shields.io/badge/CURRENT%20RELEASE-2.0.0-blue.svg)](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/tree/2.0.0) [![UPCOMING RELEASE](https://img.shields.io/badge/CURRENT%20DEV%20BRANCH-3.0.0-blue.svg)](https://github.com/AIIAL/HIASBCH-MQTT-Blockchain-Agent/tree/3.0.0) [![Contributions Welcome!](https://img.shields.io/badge/Contributions-Welcome-lightgrey.svg)](CONTRIBUTING.md)  [![Issues](https://img.shields.io/badge/Issues-Welcome-lightgrey.svg)](issues)
+[![CURRENT RELEASE](https://img.shields.io/badge/CURRENT%20RELEASE-2.0.1-blue.svg)](https://github.com/aiial/hiasbch-mqtt-blockchain-agent/tree/release-2.0.1) [![UPCOMING RELEASE](https://img.shields.io/badge/DEV%20BRANCH-develop-blue.svg)](https://github.com/aiial/hiasbch-mqtt-blockchain-agent/tree/develop) [![Contributions Welcome!](https://img.shields.io/badge/Contributions-Welcome-lightgrey.svg)](CONTRIBUTING.md)  [![Issues](https://img.shields.io/badge/Issues-Welcome-lightgrey.svg)](issues)
 
  [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/) [![Documentation Status](https://readthedocs.org/projects/hiasbch-mqtt-blockchain-agent/badge/?version=latest)](https://hiasbch-mqtt-blockchain-agent.readthedocs.io/en/latest/?badge=latest) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4980/badge)](https://bestpractices.coreinfrastructure.org/projects/4980)
 
@@ -30,9 +30,9 @@
 
 # Introduction
 
-A **HIASBCH Blockchain Agent** is a bridge between **HIAS IoT Agents**, and **HIASBCH Private Ethereum Blockhain**. The **HIASBCH MQTT Blockchain Agent** is a HIAS AI Agent that receives authenticated data and stores an immutable hash in the **HIASBCH iotJumpWay Smart Contract**.
+A **HIASBCH Blockchain Agent** is a bridge between **HIAS IoT Agents**, and **HIASBCH Private Ethereum Blockchain**. The **HIASBCH MQTT Blockchain Agent** is an extension of the HIAS IoT Agent that receives authenticated data and stores an immutable hash in the **HIASBCH Data Integrity Smart Contract**.
 
-The HIASBCH iotJumpWay Smart Contract stores permissions for all HIAS network devices and applications, and immutable hashes of data received from the HIAS network. These immutable hashes allow data integrity checks to be carried out on data stored in the historical database by comparing the hash of the data and the hash stored in HIASBCH.
+The HIASBCH Data Integrity Smart Contract stores data permissions for all HIAS network devices and applications, and immutable hashes of data received from the HIAS network. These immutable hashes allow data integrity checks to be carried out on data stored in the historical database by comparing the hash of the data and the hash stored in HIASBCH.
 
 &nbsp;
 
@@ -46,15 +46,15 @@ The protocol is publish-subscribe (Pub/Sub) communication protocol that runs ove
 
 # Blockchain
 
-A blockchain is a immutable decentralized digital ledger of transactions stored in **blocks**. HIASBCH is a private [Ethereum](https://ethereum.org/en/) blockchain that hosts Smart Contracts that allow the HIAS network to function.
+A blockchain is a immutable decentralized digital ledger of transactions stored in **blocks**. HIASBCH is a private [Ethereum](https://ethereum.org/en/) blockchain that hosts smart contracts that allow the HIAS network to function.
 
 &nbsp;
 
 # HIAS
 
-![HIAS - Hospital Intelligent Automation Server](assets/images/hias-network.jpg)
+![HIAS - Hospital Intelligent Automation Server](assets/images/hias-network-v3.jpg)
 
-[HIAS - Hospital Intelligent Automation Server](https://github.com/AIIAL/HIAS-Core) is an open-source automation server designed to control and manage an intelligent network of IoT connected devices and applications.
+[HIAS - Hospital Intelligent Automation Server](https://github.com/aiial/hias-core) is an open-source server for hospitals and medical centers, designed to control and manage a network of intelligent IoT connected devices and applications.
 
 ## HIASBCH Smart Contracts
 
@@ -62,7 +62,7 @@ The core Smart Contracts used on the HIAS network are:
 
 - **HIAS Permissions Smart Contract** - Stores permissions for all HIAS devices, applications, agents and users.
 
-- **HIAS iotJumpWay Smart Contract** - Stores iotJumpWay permissions for all HIAS devices, applications, agents and users. Stores immutable hashes of data received from the HIAS network.
+- **HIAS Data Integrity Smart Contract** - Stores data permissions for all HIAS devices, applications, agents and users. Stores immutable hashes of data received from the HIAS network.
 
 ## HIASBCH Blockchain Agents
 
