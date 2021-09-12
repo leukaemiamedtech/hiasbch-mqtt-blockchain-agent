@@ -139,10 +139,10 @@ class mqtt():
 			self.helpers.logger.info("iotJumpWay " + self.client_type + " connection successful.")
 			self.helpers.logger.info("rc: " + str(rc))
 
-			self.statusPublish("ONLINE")
+			self.status_publish("ONLINE")
 			self.subscribe()
 
-	def statusPublish(self, data):
+	def status_publish(self, data):
 		""" Status publish
 
 		Publishes a status.
@@ -178,6 +178,8 @@ class mqtt():
 			topic = splitTopic[3]
 		elif connType == "Devices":
 			topic = splitTopic[4]
+		elif connType == "HIASBCH":
+			topic = splitTopic[4]
 		elif connType == "HIASCDI":
 			topic = splitTopic[4]
 		elif connType == "HIASHDI":
@@ -186,60 +188,12 @@ class mqtt():
 		self.helpers.logger.info(msg.payload)
 		self.helpers.logger.info("iotJumpWay " + connType + " " + msg.topic  + " communication received.")
 
-		if topic == 'Actuators':
-			if self.actuatorCallback == None:
-				self.helpers.logger.info(
-						connType + " actuator callback required (actuatorCallback) !")
-			else:
-				self.actuatorCallback(msg.topic, msg.payload)
-		elif topic == 'BCI':
-			if self.bciCallback == None:
-				self.helpers.logger.info(
-						connType + " BCI callback required (bciCallback) !")
-			else:
-				self.bciCallback(msg.topic, msg.payload)
-		elif topic == 'Commands':
-			if self.commandsCallback == None:
-				self.helpers.logger.info(
-						connType + " comands callback required (commandsCallback) !")
-			else:
-				self.commandsCallback(msg.topic, msg.payload)
-		elif topic == 'Integrity':
+		if topic == 'Integrity':
 			if self.integrityCallback == None:
 				self.helpers.logger.info(
 						connType + " Integrity callback required (integrityCallback) !")
 			else:
 				self.integrityCallback(msg.topic, msg.payload)
-		elif topic == 'Life':
-			if self.lifeCallback == None:
-				self.helpers.logger.info(
-						connType + " life callback required (lifeCallback) !")
-			else:
-				self.lifeCallback(msg.topic, msg.payload)
-		elif topic == 'Sensors':
-			if self.sensorsCallback == None:
-				self.helpers.logger.info(
-						connType + " status callback required (sensorsCallback) !")
-			else:
-				self.sensorsCallback(msg.topic, msg.payload)
-		elif topic == 'State':
-			if self.stateCallback == None:
-				self.helpers.logger.info(
-						connType + " life callback required (stateCallback) !")
-			else:
-				self.stateCallback(msg.topic, msg.payload)
-		elif topic == 'Status':
-			if self.statusCallback == None:
-				self.helpers.logger.info(
-						connType + " status callback required (statusCallback) !")
-			else:
-				self.statusCallback(msg.topic, msg.payload)
-		elif topic == 'Zone':
-			if self.zoneCallback == None:
-				self.helpers.logger.info(
-						connType + " status callback required (zoneCallback) !")
-			else:
-				self.zoneCallback(msg.topic, msg.payload)
 
 	def publish(self, channel, data, channelPath = ""):
 		""" Publish
@@ -290,6 +244,6 @@ class mqtt():
 		Disconnects from the HIAS iotJumpWay MQTT Broker.
 		"""
 
-		self.statusPublish("OFFLINE")
+		self.status_publish("OFFLINE")
 		self.mClient.disconnect()
 		self.mClient.loop_stop()
